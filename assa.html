@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contaminantes Químicos Laborales</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+  :root {
+    --dark: #1a1d23; --mid: #252830; --card: #2e3240;
+    --red: #d93025; --orange: #e8621a; --amber: #c9820a;
+    --yellow: #d4a017; --green: #2a9d60; --blue: #2563b0;
+    --lightgray: #9aa0b0; --offwhite: #e8eaf0; --white: #ffffff;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Barlow', sans-serif; background: #111318; color: var(--offwhite); overflow-x: hidden; }
+
+  /* ──── NAV ──── */
+  #nav {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    background: rgba(17,19,24,0.96); border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 52px;
+  }
+  #nav .logo { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:15px; color:var(--orange); letter-spacing:1px; }
+  #nav .slides-nav { display:flex; gap:4px; flex-wrap:wrap; }
+  #nav .slides-nav a {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:28px; height:28px; border-radius:4px; font-size:11px; font-weight:600; color:var(--lightgray);
+    text-decoration:none; transition: all .2s; border: 1px solid transparent;
+  }
+  #nav .slides-nav a:hover { background: var(--orange); color:#fff; border-color:var(--orange); }
+  #nav .dl-btn {
+    background: var(--red); color:#fff; border:none; padding:6px 14px;
+    border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; text-decoration:none;
+  }
+
+  /* ──── SLIDES BASE ──── */
+  .slide {
+    min-height: 100vh; padding: 80px 60px 60px;
+    display: flex; flex-direction: column; position: relative;
+    border-bottom: 2px solid rgba(255,255,255,0.04); justify-content: center;
+  }
+  .slide::before {
+    content: attr(data-num); position: absolute; top:58px; right:60px;
+    font-family:'Barlow Condensed',sans-serif; font-size:80px; font-weight:900;
+    color: rgba(255,255,255,0.03); line-height:1; pointer-events:none; letter-spacing:-2px;
+  }
+
+  /* ──── HEADER BAR ──── */
+  .slide-header { display:flex; align-items:flex-start; gap:14px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .slide-header .accent-bar { width:5px; min-height:44px; border-radius:3px; flex-shrink:0; margin-top:2px; }
+  .slide-header h2 { font-family:'Barlow Condensed',sans-serif; font-size:clamp(22px,3vw,34px); font-weight:900; text-transform:uppercase; line-height:1.1; }
+  .slide-header .subtitle { font-size:13px; color:var(--lightgray); margin-top:4px; font-style:italic; }
+
+  /* ──── UTILITY CLASSES (Optimizado) ──── */
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; }
+  .card { background: var(--card); border-radius:8px; padding:20px; transition:.2s; }
+  .card:hover { transform:translateY(-3px); }
+  .card .ico { font-size:32px; margin-bottom:12px; }
+  
+  .quote-box {
+    background: rgba(0,0,0,0.35); border-left: 4px solid var(--orange);
+    padding:14px 18px; border-radius:0 6px 6px 0; margin:16px 0;
+  }
+  .quote-box p { font-style:italic; font-size:14px; line-height:1.6; color:var(--offwhite); }
+  .quote-box cite { font-size:11px; color:var(--lightgray); display:block; margin-top:8px; font-style:normal; }
+
+  h3 { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
+  p, li { font-size:14px; line-height:1.55; color: var(--lightgray); }
+  ul { padding-left:18px; margin-top: 10px; }
+  li { margin-bottom:8px; }
+  strong { color: var(--offwhite); }
+
+  /* ──── COMPONENTES ESPECÍFICOS ──── */
+  .pill { background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; display:inline-flex; align-items:center; gap:6px; margin-right: 8px; margin-bottom: 10px;}
+  .pill .dot { width:6px; height:6px; border-radius:50%; }
+  
+  .hier-step { display:flex; align-items:center; gap:14px; background: var(--card); padding:14px 18px; border-radius:6px; margin-bottom:10px; border-left:5px solid; }
+  .hier-step .num { font-family:'Barlow Condensed',sans-serif; font-size:28px; font-weight:900; opacity:.7; }
+  .hier-step .title { font-family:'Barlow Condensed',sans-serif; font-size:17px; font-weight:700; text-transform:uppercase; color: var(--white); }
+
+  .bg-dark { background: var(--dark); }
+  .bg-mid { background: var(--mid); }
+
+  /* ──── RESPONSIVE ──── */
+  @media(max-width:900px) {
+    .slide { padding:72px 24px 40px; }
+    .grid-4, .grid-2 { grid-template-columns:1fr; }
+  }
+  @media print {
+    #nav { display:none; }
+    .slide { page-break-after: always; min-height:auto; padding:40px; }
+    body { background:white; color:#000; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="logo">☣ RIESGOS QUÍMICOS</div>
+  <div class="slides-nav">
+    <a href="#s1">1</a><a href="#s2">2</a><a href="#s3">3</a><a href="#s4">4</a>
+    <a href="#s5">5</a><a href="#s6">6</a><a href="#s7">7</a><a href="#s8">8</a>
+  </div>
+  <a class="dl-btn" onclick="window.print()">⬇ Guardar PDF</a>
+</nav>
+
+<!-- SLIDE 1: TÍTULO -->
+<section class="slide" id="s1" data-num="01" style="background: linear-gradient(135deg, #111318 0%, #1e212a 50%, #141820 100%); align-items: center; text-align: center;">
+  <div style="font-size:80px; margin-bottom: 20px;">☣️</div>
+  <h1 style="font-family:'Barlow Condensed',sans-serif; font-size:clamp(50px,7vw,90px); font-weight:900; text-transform:uppercase; line-height:1;">
+    Contaminantes<br><span style="color:var(--orange)">Químicos</span>
+  </h1>
+  <p style="font-size:20px; color:var(--lightgray); margin:20px 0 40px;">El enemigo silencioso: Análisis toxicológico y medidas de intervención</p>
+  
+  <div>
+    <div class="pill"><div class="dot" style="background:var(--red)"></div>Peligro Mortal</div>
+    <div class="pill"><div class="dot" style="background:var(--amber)"></div>Efectos Silenciosos</div>
+    <div class="pill"><div class="dot" style="background:var(--green)"></div>GTC 45</div>
+  </div>
+</section>
+
+<!-- SLIDE 2: DEFINICIÓN -->
+<section class="slide bg-dark" id="s2" data-num="02">
+  <div class="slide-header">
+    <div class="accent-bar" style="background:var(--orange)"></div>
+    <div>
+      <h2>¿Qué es un Contaminante Químico?</h2>
+      <p class="subtitle">Naturaleza y formas de presentación en el ambiente laboral</p>
+    </div>
+  </div>
+
+  <div class="quote-box" style="margin-bottom: 40px;">
+    <p>"Toda sustancia orgánica e inorgánica, natural o sintética que... puede incorporarse al aire ambiente en forma de polvos, humos, gases o vapores, con efectos irritantes, corrosivos, asfixiantes o tóxicos y en cantidades que tengan probabilidades de lesionar la salud."</p>
+    <cite>Henao Robledo, F. (2008). Riesgos Químicos. Ecoe Ediciones, p. 2</cite>
+  </div>
+
+  <div class="grid-4">
+    <div class="card" style="border-top: 3px solid var(--orange)">
+      <div class="ico">💨</div><h3 style="color:var(--orange)">Gases y Vapores</h3>
+      <p>Fluidos en estado gaseoso que no tienen forma. Fácilmente inhalables. (Henao, p.13)</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--red)">
+      <div class="ico">🌫️</div><h3 style="color:var(--red)">Polvos</h3>
+      <p>Partículas sólidas capaces de estar temporalmente suspendidas en el aire. (Henao, p.13)</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--blue)">
+      <div class="ico">💧</div><h3 style="color:var(--blue)">Nieblas</h3>
+      <p>Líquidos que desprenden vapores o gotas suspendidas que se pueden inhalar. (Henao, p.11)</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--amber)">
+      <div class="ico">🌪️</div><h3 style="color:var(--amber)">Humos</h3>
+      <p>Partículas finas generadas por condensación de metales fundidos. Altamente asfixiantes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: VÍAS DE INGRESO -->
+<section class="slide bg-mid" id="s3" data-num="03">
+  <div class="slide-header">
+    <div class="accent-bar" style="background:var(--red)"></div>
+    <div>
+      <h2>Vías de Penetración</h2>
+      <p class="subtitle">¿Cómo ingresa el enemigo al organismo?</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card" style="border-left: 4px solid var(--red)">
+      <h3>🫁 Vía Respiratoria</h3>
+      <p><strong>La vía más importante y letal.</strong> Los pulmones tienen una inmensa superficie y gran irrigación sanguínea, absorbiendo tóxicos casi de inmediato. (Henao, p.8)</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--orange)">
+      <h3>🖐️ Vía Dérmica</h3>
+      <p>Penetración a través de la superficie epidérmica. Algunos químicos atraviesan la piel intacta y llegan al torrente sanguíneo directamente. (Henao, p.8)</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--yellow)">
+      <h3>👄 Vía Digestiva</h3>
+      <p>A través de boca, esófago, estómago e intestinos. Frecuente por malos hábitos de higiene como comer o fumar con manos contaminadas. (Henao, p.10)</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--amber)">
+      <h3>🩸 Vía Parenteral</h3>
+      <p>Penetración directa a la sangre por discontinuidad en la piel (heridas, cortes, punciones). Es la vía más rápida y directa al sistema. (Henao, p.10)</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: AGUDO VS CRÓNICO -->
+<section class="slide bg-dark" id="s4" data-num="04">
+  <div class="slide-header">
+    <div class="accent-bar" style="background:var(--amber)"></div>
+    <div>
+      <h2>Toxicidad: Agudo vs Crónico</h2>
+      <p class="subtitle">La diferencia entre el impacto inmediato y el daño latente</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- AGUDO -->
+    <div class="card" style="border-top: 5px solid var(--red); background: rgba(217,48,37,0.05);">
+      <h3 style="font-size: 24px; color: var(--red);">Efecto Agudo ⚡</h3>
+      <div class="quote-box" style="border-color: var(--red);">
+        <p>"El efecto se manifiesta luego de una única administración."</p>
+        <cite>Henao, 2008, p. 3</cite>
+      </div>
+      <ul>
+        <li><strong>Tiempo:</strong> Reacción biológica inmediata (minutos a pocas horas).</li>
+        <li><strong>Causa:</strong> Exposición masiva a altas concentraciones (accidentes, derrames).</li>
+        <li><strong>Ejemplos:</strong> Quemaduras químicas, asfixia por gases, intoxicación severa o muerte inminente.</li>
+      </ul>
+    </div>
+    
+    <!-- CRÓNICO -->
+    <div class="card" style="border-top: 5px solid var(--amber); background: rgba(201,130,10,0.05);">
+      <h3 style="font-size: 24px; color: var(--amber);">Efecto Crónico ⏳</h3>
+      <div class="quote-box" style="border-color: var(--amber);">
+        <p>"El efecto tóxico se manifiesta luego de una administración o contacto durante períodos mucho más prolongados."</p>
+        <cite>Henao, 2008, p. 3</cite>
+      </div>
+      <ul>
+        <li><strong>Tiempo:</strong> Daño acumulativo silencioso (latencia de meses a décadas).</li>
+        <li><strong>Causa:</strong> Exposición repetida a dosis bajas del contaminante en el día a día laboral.</li>
+        <li><strong>Ejemplos:</strong> Silicosis, cáncer (Benceno), alteraciones neurológicas irreversibles.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5: EFECTOS Y PELIGROSIDAD -->
+<section class="slide bg-mid" id="s5" data-num="05">
+  <div class="slide-header">
+    <div class="accent-bar" style="background:#a855f7"></div>
+    <div>
+      <h2>Efectos Fisiológicos Específicos</h2>
+      <p class="subtitle">Análisis de los daños orgánicos (Henao, 2008, p. 15-16)</p>
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div class="card" style="border-top: 3px solid var(--orange)">
+      <div class="ico">🔥</div><h3 style="color:var(--orange)">Corrosivos</h3>
+      <p>"Inflamación, quemaduras y ampollas de la zona expuesta." Destruyen tejido vivo al contacto.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--red)">
+      <div class="ico">🫁</div><h3 style="color:var(--red)">Asfixiantes</h3>
+      <p>"Los gases sustituyen el contenido normal de oxígeno del aire." Causa colapso en minutos.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid #a855f7">
+      <div class="ico">🧬</div><h3 style="color:#a855f7">Carcinógenos</h3>
+      <p>"Cáncer en el órgano afectado. A largo plazo, provoca muerte prematura." (Latencia de años).</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--amber)">
+      <div class="ico">☠️</div><h3 style="color:var(--amber)">Sistémicos</h3>
+      <p>"Muerte de células de órganos vitales con imposibilidad de desempeñar funciones biológicas."</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6: GTC 45 -->
+<section class="slide bg-dark" id="s6" data-num="06">
+  <div class="slide-header">
+    <div class="accent-bar" style="background:var(--green)"></div>
+    <div>
+      <h2>Jerarquía de Controles (GTC 45)</h2>
+      <p class="subtitle">Medidas de intervención para mitigar el riesgo químico</p>
+    </div>
+  </div>
+
+  <div class="quote-box" style="border-color: var(--green); margin-bottom: 30px;">
+    <p>"Si se requieren controles nuevos o mejorados... se deberían priorizar y determinar de acuerdo con el principio de eliminación de peligros, de acuerdo con la jerarquía de los controles."</p>
+    <cite>GTC 45, 2010, p. 16</cite>
+  </div>
+
+  <div style="max-width: 800px; margin: 0 auto;">
+    <div class="hier-step" style="border-color: var(--green)">
+      <div class="num">1</div>
+      <div><div class="title">Eliminación</div><p>"Modificar un diseño para eliminar el peligro" (GTC 45, p. 16).</p></div>
+    </div>
+    <div class="hier-step" style="border-color: #4ade80">
+      <div class="num">2</div>
+      <div><div class="title">Sustitución</div><p>"Reemplazar por un material menos peligroso." (GTC 45, p. 16).</p></div>
+    </div>
+    <div class="hier-step" style="border-color: var(--yellow)">
+      <div class="num">3</div>
+      <div><div class="title">Controles de Ingeniería</div><p>"Instalar sistemas de ventilación, protección para las máquinas..." (GTC 45, p. 16).</p></div>
+    </div>
+    <div class="hier-step" style="border-color: var(--orange)">
+      <div class="num">4</div>
+      <div><div class="title">Controles Administrativos</div><p>"Instalación de alarmas, procedimientos de seguridad..." (GTC 45, p. 16).</p></div>
+    </div>
+    <div class="hier-step" style="border-color: var(--red)">
+      <div class="num">5</div>
+      <div><div class="title">Equipos de Protección Personal (EPP)</div><p>Última barrera: "Gafas de seguridad, máscaras faciales, respiradores..." (GTC 45, p. 16).</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7: ROMBO NFPA -->
+<section class="slide bg-mid" id="s7" data-num="07">
+  <div class="slide-header">
+    <div class="accent-bar" style="background:var(--blue)"></div>
+    <div>
+      <h2>Identificación del Peligro</h2>
+      <p class="subtitle">Código NFPA 704 (El Rombo de Seguridad)</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="quote-box">
+        <p>"Hacer que los productos peligrosos puedan ser fácilmente reconocidos, a distancia, por las características del rótulo."</p>
+        <cite>Henao, 2008, p. 173</cite>
+      </div>
+      <p style="margin-top: 20px;">Cada cuadrante se numera de 0 (Sin riesgo) a 4 (Riesgo extremo).</p>
+      <ul>
+        <li><strong>Grado 4 (Salud):</strong> "Materiales que con una exposición muy corta pueden causar la muerte o lesiones mayores" (Henao, p. 176).</li>
+      </ul>
+    </div>
+    <div class="grid-2">
+      <div class="card" style="background: rgba(217,48,37,0.1); border: 2px solid var(--red); text-align:center;">
+        <h3 style="color:var(--red); margin:0;">ROJO</h3><p>Inflamabilidad</p>
+      </div>
+      <div class="card" style="background: rgba(37,99,176,0.1); border: 2px solid var(--blue); text-align:center;">
+        <h3 style="color:var(--blue); margin:0;">AZUL</h3><p>Riesgos a la Salud</p>
+      </div>
+      <div class="card" style="background: rgba(212,160,23,0.1); border: 2px solid var(--yellow); text-align:center;">
+        <h3 style="color:var(--yellow); margin:0;">AMARILLO</h3><p>Reactividad</p>
+      </div>
+      <div class="card" style="background: rgba(255,255,255,0.1); border: 2px solid var(--white); text-align:center;">
+        <h3 style="color:var(--white); margin:0;">BLANCO</h3><p>Riesgo Específico</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8: BIBLIOGRAFÍA -->
+<section class="slide bg-dark" id="s8" data-num="08">
+  <div class="slide-header">
+    <div class="accent-bar" style="background:var(--lightgray)"></div>
+    <div>
+      <h2>Bibliografía Consultada</h2>
+      <p class="subtitle">Fuentes literales empleadas en esta presentación</p>
+    </div>
+  </div>
+
+  <div class="card" style="border-left: 5px solid var(--orange); margin-bottom: 20px;">
+    <p style="font-size: 16px; color: var(--offwhite);">
+      <strong>Henao Robledo, F. (2008).</strong> <em>Riesgos Químicos.</em> Bogotá, D.C.: Ecoe Ediciones.
+    </p>
+    <p style="font-size: 13px; margin-top: 10px;">
+      Citas literales extraídas y analizadas de las páginas: 2, 3, 8, 10, 11, 13, 15, 16, 173 y 176. Empleadas en las definiciones, vías de ingreso, diferenciación toxicológica (aguda/crónica) y sistema global de identificación.
+    </p>
+  </div>
+
+  <div class="card" style="border-left: 5px solid var(--green);">
+    <p style="font-size: 16px; color: var(--offwhite);">
+      <strong>Instituto Colombiano de Normas Técnicas y Certificación [ICONTEC]. (2010).</strong> <em>Guía Técnica Colombiana GTC 45: Guía para la identificación de los peligros y la valoración de los riesgos en seguridad y salud ocupacional.</em> Bogotá, D.C.: ICONTEC.
+    </p>
+    <p style="font-size: 13px; margin-top: 10px;">
+      Citas literales y estructura metodológica extraídas de la página 16, correspondientes a los principios y jerarquización estricta de los controles de seguridad laboral.
+    </p>
+  </div>
+</section>
+
+</body>
+</html>
